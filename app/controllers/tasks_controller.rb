@@ -16,11 +16,12 @@ class TasksController < ApplicationController
 
   def update
     @task.update!(task_params)
-    redirect_to tasks_url, notice: "タスク「#@{task.name}」を更新しました。"
+    redirect_to tasks_url, notice: "タスク「#{@task.name}」を更新しました。"
   end
 
   def create
-    @task = current_user(task_params)
+    @task = current_user.tasks.new(task_params)
+    if @task.save
       redirect_to tasks_url, notice: "タスク「#{@task.name}」を登録しました。"
     else
       render :new
@@ -38,7 +39,7 @@ class TasksController < ApplicationController
     params.require(:task).permit(:name, :description)
   end
 
-  def det_task
-    @task = current_user.tasks.find(paramas[:id])
+  def set_task
+    @task = current_user.tasks.find(params[:id])
   end
 end
